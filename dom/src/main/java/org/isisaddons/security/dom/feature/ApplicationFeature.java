@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.security.dom;
+package org.isisaddons.security.dom.feature;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -42,10 +42,14 @@ import org.apache.isis.applib.annotation.MemberOrder;
         @Query(name = "findByPackageName", language = "JDOQL",
                 value = "SELECT FROM org.isisaddons.security.dom.ApplicationFeature "
                         + "WHERE packageName == :packageName"),
-        @javax.jdo.annotations.Query(
-                name = "findPackageName", language = "JDOQL",
+        @Query(name = "allPackageNames", language = "JDOQL",
                 value = "SELECT DISTINCT packageName "
                         + "FROM org.isisaddons.security.dom.ApplicationFeature "
+                        + "ORDER BY packageName"),
+        @Query(name = "findPackageName", language = "JDOQL",
+                value = "SELECT DISTINCT packageName "
+                        + "FROM org.isisaddons.security.dom.ApplicationFeature "
+                        + "WHERE packageName.matches(:matcher) "
                         + "ORDER BY packageName"),
 })
 public class ApplicationFeature implements Comparable<ApplicationFeature> {

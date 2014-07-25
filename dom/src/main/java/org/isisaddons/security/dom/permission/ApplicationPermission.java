@@ -15,12 +15,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.security.dom;
+package org.isisaddons.security.dom.permission;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+
+import org.isisaddons.security.dom.feature.ApplicationFeature;
+import org.isisaddons.security.dom.role.ApplicationRole;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)

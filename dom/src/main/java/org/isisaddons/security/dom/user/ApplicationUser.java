@@ -15,8 +15,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.security.dom;
+package org.isisaddons.security.dom.user;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -28,6 +29,7 @@ public class ApplicationUser {
 
     private String name;
 
+    @Column(allowsNull="false")
     public String getName() {
         return name;
     }

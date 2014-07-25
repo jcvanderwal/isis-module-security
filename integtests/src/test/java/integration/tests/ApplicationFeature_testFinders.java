@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 import javax.inject.Inject;
 
-import org.isisaddons.security.dom.ApplicationFeatures;
+import org.isisaddons.security.dom.feature.ApplicationFeatures;
 import org.isisaddons.security.service.ApplicationSecurityService;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,7 +48,7 @@ public class ApplicationFeature_testFinders extends IntegrationTest {
     @Test
     public void findPackageName() throws Exception {
         applicationSecurityService.loadMetaModel();
-        assertThat(features.findPackageName().size(), is(3));
+        assertThat(features.findPackageName(null).size(), is(3));
 
     }
 

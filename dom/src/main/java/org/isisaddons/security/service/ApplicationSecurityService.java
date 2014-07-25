@@ -19,16 +19,11 @@ package org.isisaddons.security.service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.isisaddons.security.dom.ApplicationFeature;
-import org.isisaddons.security.dom.ApplicationFeatures;
-import org.isisaddons.security.dom.ApplicationPermission;
-import org.isisaddons.security.dom.ApplicationRole;
 import org.isisaddons.security.dom.ApplicationSecurityManager;
+import org.isisaddons.security.dom.feature.ApplicationFeatures;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.DomainService;
@@ -53,42 +48,12 @@ public class ApplicationSecurityService extends AbstractFactoryAndRepository imp
     }
 
     @Programmatic
-    public ApplicationFeature addFeature(MetaModelRow row) {
-        final String name = row.getPackageName().concat(".").concat(row.getClassName()).concat(".").concat(row.getMemberName());
-
-        final ApplicationFeature feature = features.findFeatureByName(name);
-        if (feature != null) {
-            return feature;
-        }
-        ApplicationFeature newFeature = newTransientInstance(ApplicationFeature.class);
-        newFeature.setName(name);
-        newFeature.setClassName(row.getClassName());
-        newFeature.setPackageName(row.getPackageName());
-        newFeature.setClassType(row.getClassType());
-        newFeature.setMemberName(row.getMemberName());
-        newFeature.setMemberType(row.getType());
-
-        persist(newFeature);
-        return newFeature;
+    public ApplicationSecurityManager manage(ApplicationSecurityManager manager) {
+        final String viewModelMemento = manager == null ? null : manager.viewModelMemento();
+        return getContainer().newViewModelInstance(ApplicationSecurityManager.class, viewModelMemento);
     }
 
-    public List<ApplicationRole> allRoles() {
-        return allInstances(ApplicationRole.class);
-    }
-
-    public List<ApplicationPermission> permisionsForRole(ApplicationRole role) {
-        return allInstances(ApplicationPermission.class);
-    }
-
-    public List<ApplicationPermission> permisionsForFeature(ApplicationFeature feature) {
-        return allInstances(ApplicationPermission.class);
-    }
-
-    @PostConstruct
-    @Programmatic
-    public void init(Map<String, String> properties) {
-        
-    }
+    // //////////////////////////////////////
 
     public void loadMetaModel() {
 
@@ -104,7 +69,7 @@ public class ApplicationSecurityService extends AbstractFactoryAndRepository imp
                 if (exclude(otoa)) {
                     continue;
                 }
-                addFeature(new MetaModelRow(spec, otoa));
+                features.addFeature(this, new MetaModelRow(spec, otoa));
             }
             final List<ObjectAssociation> associations = spec.getAssociations(Contributed.EXCLUDED, ObjectAssociation.Filters.COLLECTIONS);
             for (ObjectAssociation collection : associations) {
@@ -112,17 +77,16 @@ public class ApplicationSecurityService extends AbstractFactoryAndRepository imp
                 if (exclude(otma)) {
                     continue;
                 }
-                addFeature(new MetaModelRow(spec, otma));
+                features.addFeature(this, new MetaModelRow(spec, otma));
             }
             final List<ObjectAction> actions = spec.getObjectActions(Contributed.INCLUDED);
             for (ObjectAction action : actions) {
                 if (exclude(action)) {
                     continue;
                 }
-                addFeature(new MetaModelRow(spec, action));
+                features.addFeature(this, new MetaModelRow(spec, action));
             }
         }
-
     }
 
     protected boolean exclude(OneToOneAssociation property) {
@@ -148,13 +112,6 @@ public class ApplicationSecurityService extends AbstractFactoryAndRepository imp
 
     // //////////////////////////////////////
 
-    public ApplicationSecurityManager manage(ApplicationSecurityManager manager) {
-        final String viewModelMemento = manager == null ? null : manager.viewModelMemento();
-        return getContainer().newViewModelInstance(ApplicationSecurityManager.class, viewModelMemento);
-    }
-
-    // //////////////////////////////////////
-
     private SpecificationLoaderSpi specificationLoader;
 
     @Programmatic
@@ -162,8 +119,8 @@ public class ApplicationSecurityService extends AbstractFactoryAndRepository imp
     public void setSpecificationLoaderSpi(SpecificationLoaderSpi specificationLoader) {
         this.specificationLoader = specificationLoader;
     }
-    
+
     @Inject
-    private ApplicationFeatures features;
+    public ApplicationFeatures features;
 
 }

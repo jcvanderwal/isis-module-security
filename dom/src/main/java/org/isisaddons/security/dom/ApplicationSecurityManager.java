@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.isisaddons.security.dom.feature.ApplicationFeature;
+import org.isisaddons.security.dom.feature.ApplicationFeatures;
 import org.isisaddons.security.service.ApplicationSecurityService;
 
 import org.apache.isis.applib.AbstractViewModel;
@@ -77,7 +79,7 @@ public class ApplicationSecurityManager extends AbstractViewModel {
     }
 
     public List<String> choices0SelectPackageName(String packageName) {
-        return applicationFeatures.findPackageName();
+        return applicationFeatures.allPackageNames();
     }
 
     // //////////////////////////////////////

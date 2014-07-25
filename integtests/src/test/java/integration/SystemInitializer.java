@@ -16,7 +16,7 @@
  */
 package integration;
 
-import org.isisaddons.security.dom.ApplicationFeatures;
+import org.isisaddons.security.dom.feature.ApplicationFeatures;
 import org.isisaddons.security.service.ApplicationSecurityService;
 
 import org.apache.isis.core.commons.config.IsisConfiguration;
